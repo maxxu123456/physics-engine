@@ -96,6 +96,7 @@ def main():
     balls = generate_random_balls(10)
     clock = pygame.time.Clock()
 
+    font = pygame.font.SysFont(None, 36)
     running = True
 
     while running:
@@ -178,6 +179,9 @@ def main():
 
             pygame.draw.circle(screen, (ball.color.r, ball.color.g, ball.color.b),
                                (int(ball.x), int(ball.y)), ball.radius)
+        text = font.render(f'Number of Balls: {len(balls)}, Gravity: {g:.2f}, Damping: {DAMPING:.2f}', True,
+                           (255, 255, 255))
+        screen.blit(text, (50, 50))
         pygame.display.flip()
     pygame.quit()
 
