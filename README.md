@@ -3,7 +3,7 @@
 ## Description
 
 This is a physics engine for colliding balls. I implemented gravity, damping, collisions between balls and walls,
-and collisions between balls. (GIFs run slower than in reality)
+and collisions between balls.
 
 ## GIFs
 
