@@ -3,12 +3,16 @@ import numpy as np
 import random
 from math import sqrt
 
-g = 20
+"""
+Author: Max Xu
+Enjoy!
+"""
+g = 9.81
 
 WIDTH = 1000
 HEIGHT = 700
 FPS = 60
-DAMPING = 1
+DAMPING = 0.9
 
 
 def dist(x1, y1, x2, y2):
@@ -19,10 +23,9 @@ def generate_random_balls(n):
     balls = []
     max_radius = 50
     min_radius = 10
-    min_velocity = 100
-    max_velocity = 200
-    min_mass = 0.5
-    max_mass = 5
+    min_velocity = -120
+    max_velocity = 120
+    area_to_mass_factor = 5
 
     for _ in range(n):
         radius = None
@@ -36,7 +39,8 @@ def generate_random_balls(n):
         while not valid:
             radius = random.randint(min_radius, max_radius)
             color = Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            mass = random.uniform(min_mass, max_mass)
+            # Mass is proportional to radius squared, so we multiply an arbitrary factor to r^2
+            mass = area_to_mass_factor * (radius ** 2)
 
             x = random.uniform(radius, WIDTH - radius)
             y = random.uniform(radius, HEIGHT - radius)
@@ -97,6 +101,7 @@ def main():
     clock = pygame.time.Clock()
 
     font = pygame.font.SysFont(None, 36)
+    pygame.display.set_caption("Colliding Ball Engine")
     running = True
 
     while running:
