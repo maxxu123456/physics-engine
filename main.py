@@ -1,7 +1,8 @@
-import pygame
-import numpy as np
 import random
 from math import sqrt
+
+import numpy as np
+import pygame
 
 """
 Author: Max Xu
@@ -38,9 +39,11 @@ def generate_random_balls(n):
         valid = False
         while not valid:
             radius = random.randint(min_radius, max_radius)
-            color = Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            color = Color(
+                random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+            )
             # Mass is proportional to radius squared, so we multiply an arbitrary factor to r^2
-            mass = area_to_mass_factor * (radius ** 2)
+            mass = area_to_mass_factor * (radius**2)
 
             x = random.uniform(radius, WIDTH - radius)
             y = random.uniform(radius, HEIGHT - radius)
@@ -72,8 +75,16 @@ class Color:
 
 
 class Ball:
-    def __init__(self, radius: float, color: Color, mass: float, x: float, y: float, velocity_x: float,
-                 velocity_y: float):
+    def __init__(
+        self,
+        radius: float,
+        color: Color,
+        mass: float,
+        x: float,
+        y: float,
+        velocity_x: float,
+        velocity_y: float,
+    ):
         # x and y are the center coordinates of the ball
         self.radius = radius
         self.color = color
@@ -140,8 +151,11 @@ def main():
             # Check Every Pair of Balls for a Collision
             for j in range(i + 1, len(balls)):
                 other_ball = balls[j]
-                if other_ball != ball and dist(ball.x, ball.y, other_ball.x,
-                                               other_ball.y) <= ball.radius + other_ball.radius:
+                if (
+                    other_ball != ball
+                    and dist(ball.x, ball.y, other_ball.x, other_ball.y)
+                    <= ball.radius + other_ball.radius
+                ):
                     print("Collision Occurring")
                     # Calculate the vector from one ball to the other
                     norm_vec = np.array([other_ball.x - ball.x, other_ball.y - ball.y])
@@ -155,14 +169,20 @@ def main():
                     # Decompose the velocities into normal and tangential components
                     v1n = np.dot([ball.velocity_x, ball.velocity_y], unit_norm_vec)
                     v1t = np.dot([ball.velocity_x, ball.velocity_y], unit_tangent_vec)
-                    v2n = np.dot([other_ball.velocity_x, other_ball.velocity_y], unit_norm_vec)
-                    v2t = np.dot([other_ball.velocity_x, other_ball.velocity_y], unit_tangent_vec)
+                    v2n = np.dot(
+                        [other_ball.velocity_x, other_ball.velocity_y], unit_norm_vec
+                    )
+                    v2t = np.dot(
+                        [other_ball.velocity_x, other_ball.velocity_y], unit_tangent_vec
+                    )
 
                     # Calculate new normal velocities after collision
-                    v1n_prime = (v1n * (ball.mass - other_ball.mass) + 2 * other_ball.mass * v2n) / (
-                            ball.mass + other_ball.mass)
-                    v2n_prime = (v2n * (other_ball.mass - ball.mass) + 2 * ball.mass * v1n) / (
-                            ball.mass + other_ball.mass)
+                    v1n_prime = (
+                        v1n * (ball.mass - other_ball.mass) + 2 * other_ball.mass * v2n
+                    ) / (ball.mass + other_ball.mass)
+                    v2n_prime = (
+                        v2n * (other_ball.mass - ball.mass) + 2 * ball.mass * v1n
+                    ) / (ball.mass + other_ball.mass)
 
                     # Convert scalar normal and tangential velocities into vectors
                     v1n_prime_vec = v1n_prime * unit_norm_vec
@@ -172,24 +192,32 @@ def main():
 
                     # Update velocities
                     ball.velocity_x, ball.velocity_y = v1n_prime_vec + v1t_prime_vec
-                    other_ball.velocity_x, other_ball.velocity_y = v2n_prime_vec + v2t_prime_vec
+                    other_ball.velocity_x, other_ball.velocity_y = (
+                        v2n_prime_vec + v2t_prime_vec
+                    )
 
                     # Position correction to avoid overlapping
-                    overlap = 0.5 * (
-                            ball.radius + other_ball.radius - mag + 1)
+                    overlap = 0.5 * (ball.radius + other_ball.radius - mag + 1)
                     ball.x -= overlap * unit_norm_vec[0]
                     ball.y -= overlap * unit_norm_vec[1]
                     other_ball.x += overlap * unit_norm_vec[0]
                     other_ball.y += overlap * unit_norm_vec[1]
 
-            pygame.draw.circle(screen, (ball.color.r, ball.color.g, ball.color.b),
-                               (int(ball.x), int(ball.y)), ball.radius)
-        text = font.render(f'Number of Balls: {len(balls)}, Gravity: {g:.2f}, Damping: {DAMPING:.2f}', True,
-                           (255, 255, 255))
+            pygame.draw.circle(
+                screen,
+                (ball.color.r, ball.color.g, ball.color.b),
+                (int(ball.x), int(ball.y)),
+                ball.radius,
+            )
+        text = font.render(
+            f"Number of Balls: {len(balls)}, Gravity: {g:.2f}, Damping: {DAMPING:.2f}",
+            True,
+            (255, 255, 255),
+        )
         screen.blit(text, (50, 50))
         pygame.display.flip()
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

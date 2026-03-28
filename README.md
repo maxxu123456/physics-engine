@@ -13,6 +13,4 @@ and collisions between balls.
 
 ## Instructions to Run
 
-First install numpy and pygame. Use the latest version of python, preferably 1.12.
-
-Run main.py!
+Install uv, then run uv run main.py.
